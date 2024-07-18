@@ -1,6 +1,6 @@
 # Payroll System
 
-![Login Page](https://github.com/user-attachments/assets/86cc65f8-5ac2-48e8-9dbc-b23763b7e2c4)
+![Login_Page](https://github.com/user-attachments/assets/e96831f4-dfe1-44e1-a19a-6a01667548ae)
 
 ## Description
 The Payroll System is a web application built with PHP, HTML, CSS, Bootstrap, JavaScript, and MySQL. It provides functionalities to manage employees, companies, and administrators effectively.
@@ -13,16 +13,16 @@ The Payroll System is a web application built with PHP, HTML, CSS, Bootstrap, Ja
 
 ## Screenshots
 
-![Home Page](https://github.com/user-attachments/assets/c5027457-5bc2-49d7-aa82-a71045c8d734)
+![Home_Page](https://github.com/user-attachments/assets/3f47c38d-1cec-4429-8c61-2356125ceaf0)
 *Home Page*
 
-![Company Page](https://github.com/user-attachments/assets/55cdc207-c5f5-497a-89eb-1884d2431ad7)
+![Company_Page](https://github.com/user-attachments/assets/f6366337-8438-4fce-9223-d772a0c63d74)
 *Company Page*
 
-![Designation Details Page](https://github.com/user-attachments/assets/fc0e9b7e-2d11-4c3f-be80-fa252b8cc98e)
+![Designation_Details_Page](https://github.com/user-attachments/assets/0781efd7-306b-43bc-9e8a-6fc984da9029)
 *Designation Details Page*
 
-![Employee Page](https://github.com/user-attachments/assets/94e36559-2bf4-4bf2-a405-2e4f96dc4df2)
+![Employee_Page](https://github.com/user-attachments/assets/2b22c3c5-bdae-425a-a52c-8f52d24a8594)
 *Employee Page*
 
 ## Installation

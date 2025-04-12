@@ -204,12 +204,12 @@
       // Iterate through each designation row and display the details
       while ($designationRow = mysqli_fetch_assoc($resultDesignationDetails)) {
         echo '<tr>';
-        echo '<td>' . $designationRow['des_id'] . '</td>';
-        echo '<td>' . $designationRow['des_name'] . '</td>';
-        echo '<td>' . $designationRow['des_per_hour_sal'] . '</td>';
-        echo '<td>' . $designationRow['des_per_month_sal'] . '</td>';
-        echo '<td>' . $designationRow['des_per_hour_ot_sal'] . '</td>';
-        echo '<td>' . $designationRow['des_per_month_ot_sal'] . '</td>';
+        echo '<td>' . $designationRow['designation_id'] . '</td>';
+        echo '<td>' . $designationRow['designation_name'] . '</td>';
+        echo '<td>' . $designationRow['per_hour_salary'] . '</td>';
+        echo '<td>' . $designationRow['per_month_salary'] . '</td>';
+        echo '<td>' . $designationRow['per_hour_ot_salary'] . '</td>';
+        echo '<td>' . $designationRow['per_month_ot_salary'] . '</td>';
         echo '</tr>';
       }
 

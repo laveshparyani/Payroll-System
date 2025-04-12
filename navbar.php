@@ -109,22 +109,22 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item <?php echo ($activePage == 'home') ? 'active' : ''; ?>">
-                    <a class="nav-link" href="http://localhost/payroll_system/home.php">Home</a>
+                    <a class="nav-link" href="home.php">Home</a>
                 </li>
                 <li class="nav-item <?php echo ($activePage == 'company') ? 'active' : ''; ?>">
-                    <a class="nav-link" href="http://localhost/payroll_system/company.php">Company</a>
+                    <a class="nav-link" href="company.php">Company</a>
                 </li>
                 <li class="nav-item <?php echo ($activePage == 'employee') ? 'active' : ''; ?>">
-                    <a class="nav-link" href="http://localhost/payroll_system/employee.php">Employee</a>
+                    <a class="nav-link" href="employee.php">Employee</a>
                 </li>
                 <li class="nav-item <?php echo ($activePage == 'payment') ? 'active' : ''; ?>">
-                    <a class="nav-link" href="http://localhost/payroll_system/payment.php">Payment</a>
+                    <a class="nav-link" href="payment.php">Payment</a>
                 </li>
                 <li class="nav-item <?php echo ($activePage == 'settings') ? 'active' : ''; ?>">
-                    <a class="nav-link" href="http://localhost/payroll_system/settings.php">Setting</a>
+                    <a class="nav-link" href="settings.php">Setting</a>
                 </li>
                 <li class="nav-item <?php echo ($activePage == 'logout') ? 'active' : ''; ?>">
-                    <a class="nav-link" href="http://localhost/payroll_system/index.php">Logout</a>
+                    <a class="nav-link" href="index.php">Logout</a>
                 </li>
             </ul>
         </div>

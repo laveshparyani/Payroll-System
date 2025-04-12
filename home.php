@@ -113,7 +113,7 @@
                         </div>
                         <div class="card-body">
                             <p class="card-text">Manage your company's information.</p>
-                            <a href="http://localhost/payroll_system/company.php" class="btn btn-custom">Go to Company Management</a>
+                            <a href="company.php" class="btn btn-custom">Go to Company Management</a>
                         </div>
                     </div>
                 </div>
@@ -126,7 +126,7 @@
                         </div>
                         <div class="card-body">
                             <p class="card-text">Manage your company's employees.</p>
-                            <a href="http://localhost/payroll_system/employee.php" class="btn btn-custom">Go to Employee Management</a>
+                            <a href="employee.php" class="btn btn-custom">Go to Employee Management</a>
                         </div>
                     </div>
                 </div>

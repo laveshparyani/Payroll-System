@@ -1,8 +1,9 @@
 <?php
+require 'auth.php';
 require_once 'connection.php';
 
 if (isset($_GET['company_id'])) {
-    $companyId = $_GET['company_id'];
+    $companyId = (int) $_GET['company_id'];
 
     // Check if the form is submitted
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -82,15 +83,15 @@ if (isset($_GET['company_id'])) {
             <form id="editCompanyForm" method="POST">
                 <div class="form-group">
                     <label for="company_name">Company Name:</label>
-                    <input type="text" class="form-control" name="company_name" id="company_name" value="<?php echo $company['company_name']; ?>">
+                    <input type="text" class="form-control" name="company_name" id="company_name" value="<?php echo htmlspecialchars($company['company_name']); ?>">
                 </div>
                 <div class="form-group">
                     <label for="company_address">Company Address:</label>
-                    <input type="text" class="form-control" name="company_address" id="company_address" value="<?php echo $company['company_address']; ?>">
+                    <input type="text" class="form-control" name="company_address" id="company_address" value="<?php echo htmlspecialchars($company['company_address']); ?>">
                 </div>
                 <div class="form-group">
                     <label for="company_mail">Company Mail:</label>
-                    <input type="email" class="form-control" name="company_mail" id="company_mail" value="<?php echo $company['company_mail']; ?>">
+                    <input type="email" class="form-control" name="company_mail" id="company_mail" value="<?php echo htmlspecialchars($company['company_mail']); ?>">
                 </div>
                 <button type="submit" class="btn btn-primary">Save Changes</button>
             </form>

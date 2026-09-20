@@ -1,3 +1,19 @@
+<?php
+session_start();
+
+// Already logged in? Skip the login screen.
+if (isset($_SESSION['admin_id'])) {
+    header('Location: home.php');
+    exit();
+}
+
+// Pull any login error left by login.php (flash message).
+$error_message = '';
+if (isset($_SESSION['login_error'])) {
+    $error_message = $_SESSION['login_error'];
+    unset($_SESSION['login_error']);
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +21,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/style.css">
 </head> 
 
 <style>
@@ -182,8 +198,8 @@
         </form>
 
         <!-- Display error message if it exists -->
-        <?php if (isset($error_message)) { ?>
-          <div class="error-message"><?php echo $error_message; ?></div>
+        <?php if (!empty($error_message)) { ?>
+          <div class="error-message"><?php echo htmlspecialchars($error_message); ?></div>
         <?php } ?>
 
         <div class="signup-link"> Don't have an account? <a href="signup.php">Sign Up</a>

@@ -17,12 +17,12 @@ if (isset($_POST['submit'])) {
   if ($password !== $confirmPassword) {
     $error_message = "Password entered is invalid! Please enter the correct password.";
   } else {
-    // Hash the password
-    // $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    // Hash the password before storing it
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
     // Prepare and execute the INSERT statement
     $stmt = $conn->prepare("INSERT INTO admin (name, mail_id, username, password) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $name, $email, $username, $password);
+    $stmt->bind_param("ssss", $name, $email, $username, $hashedPassword);
     $stmt->execute();
 
     if ($stmt->error) {
@@ -48,7 +48,7 @@ $conn->close();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Signup</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/style.css">
   <style>
     /* Your existing CSS styles */
 
@@ -180,23 +180,23 @@ h1 {
       
         <div class="form-group">
           <label for="name">Name</label>
-          <input type="text" id="name" name="name" required placeholder="Enter your name" value="<?php echo $name; ?>">
+          <input type="text" id="name" name="name" required placeholder="Enter your name" value="<?php echo htmlspecialchars($name); ?>">
         </div>
 
         <div class="form-group">
           <label for="email">E-Mail</label>
-          <input type="email" id="email" name="email" required placeholder="Enter your email" value="<?php echo $email; ?>">
+          <input type="email" id="email" name="email" required placeholder="Enter your email" value="<?php echo htmlspecialchars($email); ?>">
         </div>
 
         <div class="form-group">
           <label for="username">Username</label>
-          <input type="text" id="username" name="username" required placeholder="Enter a username" value="<?php echo $username; ?>">
+          <input type="text" id="username" name="username" required placeholder="Enter a username" value="<?php echo htmlspecialchars($username); ?>">
         </div>
 
         <div class="form-group">
           <label for="password">Password</label>
           <div class="input-group">
-            <input type="password" id="password" name="password" required placeholder="Enter a password" value="<?php echo $password; ?>">
+            <input type="password" id="password" name="password" required placeholder="Enter a password" value="<?php echo htmlspecialchars($password); ?>">
             <img src="eye_closed.png" alt="Eye Icon" class="eye-icon" id="eye-icon">
           </div>
         </div>

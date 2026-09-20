@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `admin` (
 -- Company
 -- ------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `company` (
-  `company_id`      INT PRIMARY KEY,
+  `company_id`      INT AUTO_INCREMENT PRIMARY KEY,
   `company_name`    VARCHAR(150) NOT NULL,
   `company_address` VARCHAR(255),
   `company_mail`    VARCHAR(150)
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `company` (
 -- Employee
 -- ------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `employee` (
-  `emp_id`      INT PRIMARY KEY,
+  `emp_id`      INT AUTO_INCREMENT PRIMARY KEY,
   `emp_name`    VARCHAR(150) NOT NULL,
   `emp_contact` VARCHAR(20),
   `emp_address` VARCHAR(255),
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `employee` (
 -- Designation (pay grades per company)
 -- ------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `designation` (
-  `designation_id`      INT PRIMARY KEY,
+  `designation_id`      INT AUTO_INCREMENT PRIMARY KEY,
   `designation_name`    VARCHAR(150) NOT NULL,
   `per_hour_salary`     DECIMAL(12,2),
   `per_month_salary`    DECIMAL(12,2),

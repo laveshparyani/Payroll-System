@@ -124,7 +124,7 @@
                     <a class="nav-link" href="settings.php">Setting</a>
                 </li>
                 <li class="nav-item <?php echo ($activePage == 'logout') ? 'active' : ''; ?>">
-                    <a class="nav-link" href="index.php">Logout</a>
+                    <a class="nav-link" href="logout.php">Logout</a>
                 </li>
             </ul>
         </div>

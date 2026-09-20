@@ -1,4 +1,4 @@
-<?php $activePage = 'company'; ?>
+<?php require 'auth.php'; $activePage = 'company'; ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -137,19 +137,8 @@
     // Initialize the $companies array with existing company data
     $companies = [];
 
-    // Fetch data from the database
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "Payroll";
-
-    // Create a connection
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-
-    // Check connection
-    if (!$conn) {
-      die("Connection failed: " . mysqli_connect_error());
-    }
+    // Use the shared connection (reads config.local.php on the server)
+    require_once 'connection.php';
 
     // Fetch data from the database
     $sql = "SELECT * FROM company";
@@ -162,9 +151,11 @@
         $company = $row;
         $companyId = $company['company_id'];
 
-        // Fetch designations for the current company
-        $sqlDesignation = "SELECT * FROM designation WHERE company_id = $companyId";
-        $resultDesignation = mysqli_query($conn, $sqlDesignation);
+        // Fetch designations for the current company (prepared to avoid injection)
+        $stmtD = mysqli_prepare($conn, "SELECT * FROM designation WHERE company_id = ?");
+        mysqli_stmt_bind_param($stmtD, "i", $companyId);
+        mysqli_stmt_execute($stmtD);
+        $resultDesignation = mysqli_stmt_get_result($stmtD);
 
         // Check if any designations are returned for the current company
         if (mysqli_num_rows($resultDesignation) > 0) {
@@ -199,19 +190,20 @@
           <?php
           // Iterate through each company
           foreach ($companies as $company) {
+            $cid = (int) $company['company_id'];
             echo '<tr>';
-            echo '<td>' . $company['company_id'] . '</td>';
-            echo '<td>' . $company['company_name'] . '</td>';
-            echo '<td>' . $company['company_address'] . '</td>';
-            echo '<td>' . $company['company_mail'] . '</td>';
+            echo '<td>' . htmlspecialchars($company['company_id']) . '</td>';
+            echo '<td>' . htmlspecialchars($company['company_name']) . '</td>';
+            echo '<td>' . htmlspecialchars($company['company_address']) . '</td>';
+            echo '<td>' . htmlspecialchars($company['company_mail']) . '</td>';
 
             echo '<td>';
-            echo '<a href="designation_details.php?company_id=' . $company['company_id'] . '"><i class="fas fa-eye" style="color: #000;"></i> Check Designation Details</a>';
+            echo '<a href="designation_details.php?company_id=' . $cid . '"><i class="fas fa-eye" style="color: #000;"></i> Check Designation Details</a>';
             echo '</td>';
 
             echo '<td class="action-column">';
-            echo '<a href="edit_company.php?company_id=' . $company['company_id'] . '"><i class="fas fa-edit" style="color: #000;"></i></a>';
-            echo '<a href="delete_company.php?company_id=' . $company['company_id'] . '"><i class="fas fa-trash-alt" style="color: #000;"></i></a>';
+            echo '<a href="edit_company.php?company_id=' . $cid . '"><i class="fas fa-edit" style="color: #000;"></i></a>';
+            echo '<a href="delete_company.php?company_id=' . $cid . '"><i class="fas fa-trash-alt" style="color: #000;"></i></a>';
             echo '</td>';
             echo '</tr>';
           }

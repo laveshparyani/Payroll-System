@@ -1,4 +1,4 @@
-<?php $activePage = 'home'; ?>
+<?php require 'auth.php'; $activePage = 'home'; ?>
 
 <!DOCTYPE html>
 <html lang="en">

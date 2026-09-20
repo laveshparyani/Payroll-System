@@ -1,20 +1,18 @@
 <?php
-$emp_id = $_GET['emp_id']; // Get the employee ID from the URL parameter (GET request)
-// Your database connection and other necessary code to fetch and delete the employee data goes here...
-// For example:
-// $employee = fetchEmployeeData($emp_id); // Implement the 'fetchEmployeeData' function to fetch the data
+require 'auth.php';
+require_once 'connection.php';
 
-// Perform the deletion of employee data (You should also implement error handling)
-//$isDeleted = deleteEmployeeData($emp_id);
+// Delete an employee by ID, then return to the employee list.
+if (isset($_GET['emp_id'])) {
+    $emp_id = (int) $_GET['emp_id'];
 
-// Send the response (JSON format) to the frontend to handle the result
-$response = array();
-if ($isDeleted) {
-    $response['success'] = true;
-    $response['message'] = 'Employee data deleted successfully.';
-} else {
-    $response['success'] = false;
-    $response['message'] = 'Failed to delete employee data.';
+    $stmt = mysqli_prepare($conn, "DELETE FROM employee WHERE emp_id = ?");
+    mysqli_stmt_bind_param($stmt, "i", $emp_id);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
+    mysqli_close($conn);
 }
 
-echo json_encode($response);
+header('Location: employee.php');
+exit();
+?>

@@ -108,7 +108,7 @@ if (isset($_GET['company_id'])) {
 
                     // Perform an AJAX request to update the company data
                     $.ajax({
-                        url: 'edit_company.php?company_id=<?php echo (int) $companyId; ?>', // PHP script that handles the form submission
+                        url: 'edit_company.php' + window.location.search, // reuse the current ?company_id= from the page URL
                         type: 'POST',
                         data: formData,
                         dataType: 'json',

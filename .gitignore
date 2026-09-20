@@ -1,0 +1,22 @@
+# Dependencies
+/vendor/
+composer.lock
+
+# Environment / secrets (never commit real DB credentials)
+.env
+.env.*
+config.local.php
+
+# Logs
+*.log
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Build / temp
+/tmp/
+*.tmp
+*.bak

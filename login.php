@@ -1,35 +1,33 @@
 <?php
+session_start();
 require_once "connection.php";
 
-if (isset($_POST['submit'])) { 
-    $username = $_POST['username']; 
+if (isset($_POST['submit'])) {
+    $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $stmt = $conn->prepare("SELECT * FROM admin WHERE username = ? AND password = ?");
-    $stmt->bind_param("ss", $username, $password);
+    // Look up the admin by username only, then verify the hashed password.
+    $stmt = $conn->prepare("SELECT id, username, password FROM admin WHERE username = ?");
+    $stmt->bind_param("s", $username);
     $stmt->execute();
-
-    if ($stmt->error) {
-        die("Error: " . $stmt->error);
-    }    
-
-    // Get the result of the SELECT query
     $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    $stmt->close();
+    $conn->close();
 
-    if ($result->num_rows === 1) {
-        // Username and password are correct
-        // Redirect the user to home.php
+    if ($row && password_verify($password, $row['password'])) {
+        // Credentials are valid: start an authenticated session.
+        $_SESSION['admin_id'] = $row['id'];
+        $_SESSION['username'] = $row['username'];
         header("Location: home.php");
         exit();
-    } else {
-        // Username or password is invalid
-        $error_message = "Username or Password is invalid! Please enter your details again.";
-        header("Location: index.php");
     }
 
-    $stmt->close();
+    // Invalid credentials: flash an error and return to the login page.
+    $_SESSION['login_error'] = "Username or Password is invalid! Please enter your details again.";
+    header("Location: index.php");
+    exit();
 }
 
-// Close the database connection
 $conn->close();
 ?>

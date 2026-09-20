@@ -1,4 +1,4 @@
-<?php $activePage = 'payment'; ?>
+<?php require 'auth.php'; $activePage = 'payment'; ?>
 
 <!DOCTYPE html>
 <html>

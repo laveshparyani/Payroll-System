@@ -1,4 +1,4 @@
-<?php $activePage = 'settings'; ?>
+<?php require 'auth.php'; $activePage = 'settings'; ?>
 
 <!DOCTYPE html>
 <html>

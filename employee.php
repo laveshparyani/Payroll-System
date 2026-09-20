@@ -1,4 +1,4 @@
-<?php $activePage = 'employee'; ?>
+<?php require 'auth.php'; $activePage = 'employee'; ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -154,16 +154,17 @@
                 <tbody id="employeeTableBody">
                     <?php
                     foreach ($employees as $employee) {
+                        $empIdEnc = (int) $employee['emp_id'];
                         echo '<tr>';
-                        echo '<td>' . $employee['emp_id'] . '</td>';
-                        echo '<td>' . $employee['emp_name'] . '</td>';
-                        echo '<td>' . $employee['emp_contact'] . '</td>';
-                        echo '<td>' . $employee['emp_address'] . '</td>';
-                        echo '<td>' . $employee['emp_salary'] . '</td>';
-                        echo '<td>' . $employee['company_id'] . '</td>';
+                        echo '<td>' . htmlspecialchars($employee['emp_id']) . '</td>';
+                        echo '<td>' . htmlspecialchars($employee['emp_name']) . '</td>';
+                        echo '<td>' . htmlspecialchars($employee['emp_contact']) . '</td>';
+                        echo '<td>' . htmlspecialchars($employee['emp_address']) . '</td>';
+                        echo '<td>' . htmlspecialchars($employee['emp_salary']) . '</td>';
+                        echo '<td>' . htmlspecialchars($employee['company_id']) . '</td>';
                         echo '<td>
-                                    <a href="edit_employee.php?emp_id=' . $employee['emp_id'] . '"><i class="fas fa-edit" style="color: #000;"></i></a>
-                                    <a href="delete_employee.php?emp_id=' . $employee['emp_id'] . '"><i class="fas fa-trash-alt" style="color: #000;"></i></a>
+                                    <a href="edit_employee.php?emp_id=' . $empIdEnc . '"><i class="fas fa-edit" style="color: #000;"></i></a>
+                                    <a href="delete_employee.php?emp_id=' . $empIdEnc . '"><i class="fas fa-trash-alt" style="color: #000;"></i></a>
                                   </td>';
                         echo '</tr>';
                     }

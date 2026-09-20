@@ -1,49 +1,30 @@
 <?php
-// Check if the company ID is provided
+require 'auth.php';
+require_once 'connection.php';
+
+// Delete a company (and its dependent rows) by ID, then return to the list.
 if (isset($_GET['company_id'])) {
-  $companyId = $_GET['company_id'];
+    $companyId = (int) $_GET['company_id'];
 
-  // Perform the necessary delete operations on the database using the provided company ID
+    // Remove dependent rows first, then the company (prepared statements).
+    $stmt = mysqli_prepare($conn, "DELETE FROM designation WHERE company_id = ?");
+    mysqli_stmt_bind_param($stmt, "i", $companyId);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
 
-  // Create a connection to the database
-  $servername = "localhost";
-  $username = "root";
-  $password = "";
-  $dbname = "Payroll";
+    $stmt = mysqli_prepare($conn, "DELETE FROM employee WHERE company_id = ?");
+    mysqli_stmt_bind_param($stmt, "i", $companyId);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
 
-  // Create a connection
-  $conn = mysqli_connect($servername, $username, $password, $dbname);
+    $stmt = mysqli_prepare($conn, "DELETE FROM company WHERE company_id = ?");
+    mysqli_stmt_bind_param($stmt, "i", $companyId);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
 
-  // Check connection
-  if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-  }
-
-  // Delete the designations related to the company
-  $sqlDeleteDesignations = "DELETE FROM designation WHERE company_id = $companyId";
-  if (mysqli_query($conn, $sqlDeleteDesignations)) {
-    // Designations deleted successfully
-
-    // Now delete the company
-    $sqlDeleteCompany = "DELETE FROM company WHERE company_id = $companyId";
-    if (mysqli_query($conn, $sqlDeleteCompany)) {
-      // Company deleted successfully
-
-      // Redirect to the company listing page after the delete
-      header('Location: company.php');
-      exit();
-    } else {
-      echo "Error deleting company: " . mysqli_error($conn);
-    }
-  } else {
-    echo "Error deleting designations: " . mysqli_error($conn);
-  }
-
-  // Close the database connection
-  mysqli_close($conn);
-} else {
-  // Redirect to the company listing page if the company ID is not provided
-  header('Location: company.php');
-  exit();
+    mysqli_close($conn);
 }
+
+header('Location: company.php');
+exit();
 ?>

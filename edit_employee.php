@@ -1,34 +1,20 @@
 <?php
-$emp_id = $_GET['emp_id']; // Get the employee ID from the URL parameter (GET request)
+require 'auth.php';
+require_once 'connection.php';
 
-// Your database connection and other necessary code to fetch the employee data goes here...
-// For example:
-// $employee = fetchEmployeeData($emp_id); // Implement the 'fetchEmployeeData' function to fetch the data
-// Ensure that the $employee variable is populated with the employee data before proceeding.
+$emp_id = isset($_GET['emp_id']) ? (int) $_GET['emp_id'] : 0;
 
-// Example code:
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "Payroll";
-
-// Create a connection
-$conn = mysqli_connect($servername, $username, $password, $dbname);
-
-// Check connection
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
-
-// Prepare and execute the select statement to fetch employee data
+// Fetch the employee to edit (prepared statement).
 $stmt = mysqli_prepare($conn, "SELECT * FROM employee WHERE emp_id = ?");
 mysqli_stmt_bind_param($stmt, "i", $emp_id);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
-
-// Fetch the employee details
 $employee = mysqli_fetch_assoc($result);
 
+if (!$employee) {
+    echo "No employee found with the given ID.";
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -51,26 +37,28 @@ $employee = mysqli_fetch_assoc($result);
     <div class="container py-5">
         <h2>Edit Employee Data</h2>
         <form id="editEmployeeForm" method="POST">
+            <!-- Hidden employee id so the server knows which row to update -->
+            <input type="hidden" name="emp_id" value="<?php echo (int) $employee['emp_id']; ?>">
             <!-- Display the existing employee data in the input fields -->
             <div class="form-group">
                 <label for="employeeName">Employee Name:</label>
-                <input type="text" class="form-control" name="employeeName" id="employeeName" value="<?php echo $employee['emp_name']; ?>">
+                <input type="text" class="form-control" name="employeeName" id="employeeName" value="<?php echo htmlspecialchars($employee['emp_name']); ?>">
             </div>
             <div class="form-group">
                 <label for="employeeContact">Employee Contact:</label>
-                <input type="text" class="form-control" name="employeeContact" id="employeeContact" value="<?php echo $employee['emp_contact']; ?>">
+                <input type="text" class="form-control" name="employeeContact" id="employeeContact" value="<?php echo htmlspecialchars($employee['emp_contact']); ?>">
             </div>
             <div class="form-group">
                 <label for="employeeAddress">Employee Address:</label>
-                <input type="text" class="form-control" name="employeeAddress" id="employeeAddress" value="<?php echo $employee['emp_address']; ?>">
+                <input type="text" class="form-control" name="employeeAddress" id="employeeAddress" value="<?php echo htmlspecialchars($employee['emp_address']); ?>">
             </div>
             <div class="form-group">
                 <label for="employeeSalary">Employee Salary:</label>
-                <input type="text" class="form-control" name="employeeSalary" id="employeeSalary" value="<?php echo $employee['emp_salary']; ?>">
+                <input type="text" class="form-control" name="employeeSalary" id="employeeSalary" value="<?php echo htmlspecialchars($employee['emp_salary']); ?>">
             </div>
             <div class="form-group">
                 <label for="employeeCompany">Employee Company:</label>
-                <input type="text" class="form-control" name="employeeCompany" id="employeeCompany" value="<?php echo $employee['company_id']; ?>">
+                <input type="text" class="form-control" name="employeeCompany" id="employeeCompany" value="<?php echo htmlspecialchars($employee['company_id']); ?>">
             </div>
             <button type="submit" class="btn btn-primary">Save Changes</button>
         </form>

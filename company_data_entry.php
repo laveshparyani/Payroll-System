@@ -1,4 +1,59 @@
-<?php $activePage = 'company'; ?>
+<?php
+require 'auth.php';
+require_once 'connection.php';
+
+$activePage = 'company';
+$errorMessage = '';
+
+// Handle the submitted company + designations.
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cname'])) {
+    $cname    = trim($_POST['cname']);
+    $caddress = trim($_POST['caddress']);
+    $cmail    = trim($_POST['cmail']);
+
+    if ($cname === '' || $caddress === '' || $cmail === '') {
+        $errorMessage = 'Please fill in all company fields.';
+    } else {
+        // Insert the company (company_id is auto-increment).
+        $stmt = mysqli_prepare($conn, "INSERT INTO company (company_name, company_address, company_mail) VALUES (?, ?, ?)");
+        mysqli_stmt_bind_param($stmt, "sss", $cname, $caddress, $cmail);
+
+        if (mysqli_stmt_execute($stmt)) {
+            $newCompanyId = mysqli_insert_id($conn);
+            mysqli_stmt_close($stmt);
+
+            // Insert each designation row for this company.
+            $names = $_POST['desname'] ?? [];
+            $ph    = $_POST['perhour'] ?? [];
+            $pm    = $_POST['permonth'] ?? [];
+            $pho   = $_POST['perhourot'] ?? [];
+            $pmo   = $_POST['permonthot'] ?? [];
+
+            $dstmt = mysqli_prepare($conn, "INSERT INTO designation (designation_name, per_hour_salary, per_month_salary, per_hour_ot_salary, per_month_ot_salary, company_id) VALUES (?, ?, ?, ?, ?, ?)");
+            for ($i = 0; $i < count($names); $i++) {
+                if (trim($names[$i]) === '') {
+                    continue;
+                }
+                $dName = $names[$i];
+                $dPh   = $ph[$i]  ?? 0;
+                $dPm   = $pm[$i]  ?? 0;
+                $dPho  = $pho[$i] ?? 0;
+                $dPmo  = $pmo[$i] ?? 0;
+                mysqli_stmt_bind_param($dstmt, "sddddi", $dName, $dPh, $dPm, $dPho, $dPmo, $newCompanyId);
+                mysqli_stmt_execute($dstmt);
+            }
+            mysqli_stmt_close($dstmt);
+            mysqli_close($conn);
+
+            header('Location: company.php');
+            exit();
+        } else {
+            $errorMessage = 'Failed to add company.';
+            mysqli_stmt_close($stmt);
+        }
+    }
+}
+?>
 
 <!DOCTYPE html>
 <html>
@@ -59,7 +114,7 @@
             <h2 class="text-center">COMPANY DATA ENTRY</h2>
 
             <?php if (!empty($errorMessage)): ?>
-                <div class="alert alert-danger"><?php echo $errorMessage; ?></div>
+                <div class="alert alert-danger"><?php echo htmlspecialchars($errorMessage); ?></div>
             <?php endif; ?>
 
             <form method="POST" action="company_data_entry.php">

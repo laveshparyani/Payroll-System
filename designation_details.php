@@ -1,4 +1,4 @@
-<?php $activePage = 'company'; ?>
+<?php require 'auth.php'; $activePage = 'company'; ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -156,42 +156,34 @@
   <div class="container py-5">
     <?php
     // Fetch the company ID from the URL parameter
-    $companyId = $_GET['company_id'];
+    $companyId = isset($_GET['company_id']) ? (int) $_GET['company_id'] : 0;
 
     // Initialize the $designations array
     $designations = [];
 
-    // Fetch data from the database
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "Payroll";
+    // Use the shared connection (reads config.local.php on the server)
+    require_once 'connection.php';
 
-    // Create a connection
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-
-    // Check connection
-    if (!$conn) {
-      die("Connection failed: " . mysqli_connect_error());
-    }
-
-    // Fetch designation details for the selected company from the database
-    $sqlDesignationDetails = "SELECT * FROM designation WHERE company_id = $companyId";
-    $resultDesignationDetails = mysqli_query($conn, $sqlDesignationDetails);
+    // Fetch designation details for the selected company (prepared)
+    $stmtDes = mysqli_prepare($conn, "SELECT * FROM designation WHERE company_id = ?");
+    mysqli_stmt_bind_param($stmtDes, "i", $companyId);
+    mysqli_stmt_execute($stmtDes);
+    $resultDesignationDetails = mysqli_stmt_get_result($stmtDes);
 
     // Check if any designations are returned for the selected company
     if (mysqli_num_rows($resultDesignationDetails) > 0) {
-      // Fetch company details from the database
-      $sqlCompanyDetails = "SELECT company_name, company_address, company_mail FROM company WHERE company_id = $companyId";
-      $resultCompanyDetails = mysqli_query($conn, $sqlCompanyDetails);
-      $companyDetails = mysqli_fetch_assoc($resultCompanyDetails);
+      // Fetch company details from the database (prepared)
+      $stmtCo = mysqli_prepare($conn, "SELECT company_name, company_address, company_mail FROM company WHERE company_id = ?");
+      mysqli_stmt_bind_param($stmtCo, "i", $companyId);
+      mysqli_stmt_execute($stmtCo);
+      $companyDetails = mysqli_fetch_assoc(mysqli_stmt_get_result($stmtCo));
 
       // Display company details in a card
       echo '<div class="card">';
       echo '<h5 class="card-title">Company Details</h5>';
-      echo '<div class="card-text"><span class="font-weight-bold"> Company Name: </span>' . $companyDetails['company_name'] . '</div>';
-      echo '<div class="card-text"><span class="font-weight-bold"> Company Address: </span>' . $companyDetails['company_address'] . '</div>';
-      echo '<div class="card-text"><span class="font-weight-bold"> Company Mail: </span>' . $companyDetails['company_mail'] . '</div>';
+      echo '<div class="card-text"><span class="font-weight-bold"> Company Name: </span>' . htmlspecialchars($companyDetails['company_name']) . '</div>';
+      echo '<div class="card-text"><span class="font-weight-bold"> Company Address: </span>' . htmlspecialchars($companyDetails['company_address']) . '</div>';
+      echo '<div class="card-text"><span class="font-weight-bold"> Company Mail: </span>' . htmlspecialchars($companyDetails['company_mail']) . '</div>';
       echo '</div>';
       
 
@@ -204,12 +196,12 @@
       // Iterate through each designation row and display the details
       while ($designationRow = mysqli_fetch_assoc($resultDesignationDetails)) {
         echo '<tr>';
-        echo '<td>' . $designationRow['designation_id'] . '</td>';
-        echo '<td>' . $designationRow['designation_name'] . '</td>';
-        echo '<td>' . $designationRow['per_hour_salary'] . '</td>';
-        echo '<td>' . $designationRow['per_month_salary'] . '</td>';
-        echo '<td>' . $designationRow['per_hour_ot_salary'] . '</td>';
-        echo '<td>' . $designationRow['per_month_ot_salary'] . '</td>';
+        echo '<td>' . htmlspecialchars($designationRow['designation_id']) . '</td>';
+        echo '<td>' . htmlspecialchars($designationRow['designation_name']) . '</td>';
+        echo '<td>' . htmlspecialchars($designationRow['per_hour_salary']) . '</td>';
+        echo '<td>' . htmlspecialchars($designationRow['per_month_salary']) . '</td>';
+        echo '<td>' . htmlspecialchars($designationRow['per_hour_ot_salary']) . '</td>';
+        echo '<td>' . htmlspecialchars($designationRow['per_month_ot_salary']) . '</td>';
         echo '</tr>';
       }
 

@@ -25,16 +25,10 @@ if (isset($_GET['company_id'])) {
         mysqli_stmt_bind_param($stmt, "sssi", $companyName, $companyAddress, $companyMail, $companyId);
         mysqli_stmt_execute($stmt);
 
-        // Return the updated company data as a JSON response
+        // Return a simple JSON response (no reflected input)
         $response = [
             'success' => true,
             'message' => 'Company data updated successfully.',
-            'company' => [
-                'company_id' => $companyId,
-                'company_name' => $companyName,
-                'company_address' => $companyAddress,
-                'company_mail' => $companyMail,
-            ],
         ];
 
         header('Content-Type: application/json');
@@ -114,7 +108,7 @@ if (isset($_GET['company_id'])) {
 
                     // Perform an AJAX request to update the company data
                     $.ajax({
-                        url: 'edit_company.php?company_id=<?php echo $companyId; ?>', // PHP script that handles the form submission
+                        url: 'edit_company.php?company_id=<?php echo (int) $companyId; ?>', // PHP script that handles the form submission
                         type: 'POST',
                         data: formData,
                         dataType: 'json',

@@ -1,0 +1,56 @@
+name: Deploy to InfinityFree
+
+# On every push to main, generate the server DB config from GitHub Secrets
+# (so real credentials never live in the repo) and upload the site over FTP.
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-infinityfree
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: FTP deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate config.local.php from secrets
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+        run: |
+          {
+            echo '<?php'
+            printf '$servername = "%s";\n' "$DB_HOST"
+            printf '$username = "%s";\n' "$DB_USER"
+            printf '$password = "%s";\n' "$DB_PASSWORD"
+            printf '$dbname = "%s";\n' "$DB_NAME"
+          } > config.local.php
+          echo "config.local.php generated ($(wc -l < config.local.php) lines)"
+
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: htdocs/
+          local-dir: ./
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            **/database/**
+            **/README.md
+            **/LICENSE

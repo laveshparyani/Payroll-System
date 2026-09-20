@@ -1,0 +1,44 @@
+name: Semgrep
+
+# CodeQL does not support PHP, so Semgrep provides the code-scanning coverage
+# instead. It runs the PHP and security-audit rule sets and uploads the results
+# as SARIF, so findings appear under Security -> Code scanning alerts.
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '27 3 * * 1'  # weekly, Monday 03:27 UTC
+
+permissions:
+  contents: read
+
+jobs:
+  semgrep:
+    name: Scan (PHP + security-audit)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Semgrep
+        run: pip install semgrep
+
+      - name: Run Semgrep
+        run: semgrep scan --config=p/php --config=p/security-audit --sarif --output=semgrep.sarif
+        continue-on-error: true
+
+      - name: Upload SARIF to code scanning
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: semgrep.sarif
